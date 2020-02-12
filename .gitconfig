@@ -1,0 +1,10 @@
+[core]
+    excludesfile = ~/.gitignore
+    editor = nano
+
+[user]
+    name = Maciej Deregowski
+    email = maciej.deregowski@gmail.com
+
+[push]
+    default = current
