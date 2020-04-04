@@ -1,27 +1,25 @@
 import logging
 from enum import Enum
-from typing import List, Dict
+from typing import Dict
 
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, AnyHttpUrl
+from fastapi import FastAPI, HTTPException, Body
+from pydantic import BaseModel, AnyHttpUrl, Field
 from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:3000"
-]
+origins = ["http://localhost:3000"]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
 
-class RecipeType(Enum):
+class RecipeType(str, Enum):
     breakfast = "breakfast"
     snack = "snack"
     lunch = "lunch"
@@ -29,10 +27,18 @@ class RecipeType(Enum):
 
 
 class Recipe(BaseModel):
-    ingredients: List[str]
     name: str
     link: AnyHttpUrl
     recipe_type: RecipeType
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "Recipe",
+                "link": "http://google.com",
+                "recipe_type": RecipeType.breakfast,
+            }
+        }
 
 
 in_memory_db: Dict[int, Recipe] = dict()

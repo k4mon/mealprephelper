@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  mealprephelper:
+    build: .
+    image: mealprephelper
+    volumes:
+      - ./app:/app
+    ports:
+      - 5555:5555
+    restart: always
+    working_dir: /app
+    command: uvicorn mealprephelper:app --reload --host 0.0.0.0 --port 5555
