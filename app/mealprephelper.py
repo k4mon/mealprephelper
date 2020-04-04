@@ -1,9 +1,9 @@
 import logging
 from enum import Enum
-from typing import Dict
+from typing import Dict, Set
 
-from fastapi import FastAPI, HTTPException, Body
-from pydantic import BaseModel, AnyHttpUrl, Field
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, AnyHttpUrl
 from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -29,14 +29,14 @@ class RecipeType(str, Enum):
 class Recipe(BaseModel):
     name: str
     link: AnyHttpUrl
-    recipe_type: RecipeType
+    recipe_types: Set[RecipeType]
 
     class Config:
         schema_extra = {
             "example": {
                 "name": "Recipe",
                 "link": "http://google.com",
-                "recipe_type": RecipeType.breakfast,
+                "recipe_types": {RecipeType.breakfast},
             }
         }
 
