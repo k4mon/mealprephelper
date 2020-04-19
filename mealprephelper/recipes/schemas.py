@@ -12,13 +12,38 @@ class RecipeType(BaseModel):
         orm_mode = True
 
 
+class IngredientBase(BaseModel):
+    name: str
+
+    class Config:
+        orm_mode = True
+
+
+class Ingredient(IngredientBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+class RecipeIngredient(IngredientBase):
+    amount: str
+
+    class Config:
+        orm_mode = True
+
+
 class RecipeBase(BaseModel):
     name: str
     link: AnyHttpUrl
 
+    class Config:
+        orm_mode = True
+
 
 class RecipeCreate(RecipeBase):
     recipe_types: List[str]
+    ingredients: List[RecipeIngredient]
 
     class Config:
         orm_mode = True
@@ -36,6 +61,4 @@ class Recipe(RecipeBase):
     name: str
     link: AnyHttpUrl
     recipe_types: List[RecipeType]
-
-    class Config:
-        orm_mode = True
+    ingredients: List[RecipeIngredient]

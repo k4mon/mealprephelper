@@ -11,16 +11,31 @@ recipe_recipe_types_association_table = Table(
 )
 
 
+class Ingredient(Base):
+    __tablename__ = "ingredients"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+
+
+class RecipeIngredients(Base):
+    __tablename__ = "recipe_ingredients"
+    recipe_id = Column(Integer, ForeignKey("recipes.id"), primary_key=True)
+    ingredient_id = Column(Integer, ForeignKey("ingredients.id"), primary_key=True)
+    ingredient = relationship("Ingredient")
+    amount = Column(Integer, nullable=False)
+
+
 class Recipe(Base):
     __tablename__ = "recipes"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     link = Column(String)
-
     recipe_types = relationship(
         "RecipeType", secondary=recipe_recipe_types_association_table, back_populates="recipes",
     )
+    ingredients = relationship("RecipeIngredients")
 
 
 class RecipeType(Base):

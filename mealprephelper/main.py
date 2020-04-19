@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from starlette.middleware.cors import CORSMiddleware
 
 from mealprephelper.config import origins
-from mealprephelper.recipes import api as recipes_api
+from mealprephelper.recipes.apis import ingredients_api, recipes_api
 from mealprephelper.users import api as users_api
 
 app = FastAPI()
@@ -23,4 +23,11 @@ app.include_router(users_api.router, tags=["users"])
 
 app.include_router(
     recipes_api.router, prefix="/recipes", tags=["recipes"], dependencies=[Depends(oauth2_scheme)],
+)
+
+app.include_router(
+    ingredients_api.router,
+    prefix="/ingredients",
+    tags=["ingredients"],
+    dependencies=[Depends(oauth2_scheme)],
 )
