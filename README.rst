@@ -8,4 +8,4 @@ To execute migrations:
  - start containers with ``docker-compose up --build``
  - get into the mealprephelper container
  - change directory to /app/alembic
- - execute ``alembic upgrade head`
+ - execute ``alembic upgrade head``
