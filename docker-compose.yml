@@ -2,17 +2,20 @@ version: '3.7'
 
 services:
   mealprephelper:
-    build: mealprephelper
+    build: .
     image: mealprephelper
     env_file:
       - env/local.env
     volumes:
-      - ./mealprephelper/src:/app
+      - ./mealprephelper:/app/mealprephelper
+      - ./alembic:/app/alembic
     ports:
       - 5555:5555
     restart: always
+    depends_on:
+      - db
     working_dir: /app
-    command: uvicorn mealprephelper:app --reload --host 0.0.0.0 --port 5555
+    command: ["sh", "-c", "./mealprephelper/wait-for db:5432 -- uvicorn mealprephelper.main:app --reload --host 0.0.0.0 --port 5555"]
 
   db:
     image: postgres:11.7
@@ -26,4 +29,4 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8080:8082
+      - 8080:8080
