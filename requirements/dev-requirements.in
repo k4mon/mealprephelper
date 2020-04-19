@@ -1,0 +1,6 @@
+-r requirements.in
+black
+pre-commit
+wheel
+flake8
+pre-commit-hooks
