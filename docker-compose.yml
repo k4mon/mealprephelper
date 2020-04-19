@@ -1,13 +1,29 @@
-version: '2'
+version: '3.7'
 
 services:
   mealprephelper:
-    build: .
+    build: mealprephelper
     image: mealprephelper
+    env_file:
+      - env/local.env
     volumes:
-      - ./app:/app
+      - ./mealprephelper/src:/app
     ports:
       - 5555:5555
     restart: always
     working_dir: /app
     command: uvicorn mealprephelper:app --reload --host 0.0.0.0 --port 5555
+
+  db:
+    image: postgres:11.7
+    ports:
+      - 5432:5432
+    restart: always
+    env_file:
+      - env/local.env
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8082

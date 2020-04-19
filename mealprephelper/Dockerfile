@@ -4,13 +4,13 @@ RUN apk update && \
     apk add make && \
     apk add --virtual .build-deps gcc musl-dev
 
-ADD requirements.txt /tmp/requirements.txt
+ADD requirements/requirements.txt /tmp/requirements.txt
 RUN python3 -m pip install -r /tmp/requirements.txt --no-cache-dir -q
 
 RUN apk --purge del .build-deps
 
 
-ADD app .
+ADD src /app
 WORKDIR /app
 
 EXPOSE 5555
