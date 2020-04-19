@@ -1,22 +1,14 @@
-from typing import List
-
 from fastapi import FastAPI, Depends
-from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordBearer
 from starlette.middleware.cors import CORSMiddleware
 
 from mealprephelper.config import origins
-from mealprephelper.database.database import engine, SessionLocal
-from mealprephelper.recipes import models, schemas, service
+from mealprephelper.recipes import api as recipes_api
+from mealprephelper.users import api as users_api
 
 app = FastAPI()
 
-
-def get_db():
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
 app.add_middleware(
@@ -27,29 +19,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(users_api.router, tags=["users"])
 
-@app.get("/recipes/", response_model=List[schemas.Recipe])
-def get_recipes(db: Session = Depends(get_db)):
-    return service.get_recipes(db)
-
-
-@app.get("/recipes/{recipe_id}", response_model=schemas.Recipe)
-def get_recipe(recipe_id: int, db: Session = Depends(get_db)):
-    return service.get_recipe(db, recipe_id)
-
-
-@app.post("/recipes/", response_model=schemas.Recipe)
-def create_recipe(recipe: schemas.Recipe, db: Session = Depends(get_db)):
-    return service.create_recipe(db, recipe)
-
-
-@app.put("/recipes/{recipe_id}", response_model=schemas.Recipe)
-def update_recipe(
-    recipe_id: int, recipe: schemas.Recipe, db: Session = Depends(get_db)
-):
-    return service.update_recipe(db, recipe_id, recipe)
-
-
-@app.delete("/recipes/{recipe_id}")
-def delete_recipe(recipe_id: int, db: Session = Depends(get_db)):
-    return service.delete_recipe(db, recipe_id)
+app.include_router(
+    recipes_api.router,
+    prefix="/recipes",
+    tags=["recipes"],
+    dependencies=[Depends(oauth2_scheme)],
+)
