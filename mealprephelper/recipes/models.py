@@ -19,9 +19,7 @@ class Recipe(Base):
     link = Column(String)
 
     recipe_types = relationship(
-        "RecipeType",
-        secondary=recipe_recipe_types_association_table,
-        back_populates="recipes",
+        "RecipeType", secondary=recipe_recipe_types_association_table, back_populates="recipes",
     )
 
 
@@ -33,7 +31,5 @@ class RecipeType(Base):
     color = Column(String)
 
     recipes = relationship(
-        "Recipe",
-        secondary=recipe_recipe_types_association_table,
-        back_populates="recipe_types",
+        "Recipe", secondary=recipe_recipe_types_association_table, back_populates="recipe_types",
     )

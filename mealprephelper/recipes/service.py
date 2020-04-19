@@ -21,9 +21,7 @@ def create_recipe(db: Session, recipe: schemas.RecipeCreate):
         .filter(models.RecipeType.name.in_(recipe.dict().pop("recipe_types", None)))
         .all()
     )
-    db_recipe = models.Recipe(
-        name=recipe.name, link=recipe.link, recipe_types=recipe_types
-    )
+    db_recipe = models.Recipe(name=recipe.name, link=recipe.link, recipe_types=recipe_types)
     db.add(db_recipe)
     db.commit()
     return db_recipe
@@ -35,9 +33,7 @@ def update_recipe(db: Session, recipe_id: int, recipe: schemas.RecipeCreate):
         if k == "recipe_types":
             v = (
                 db.query(models.RecipeType)
-                .filter(
-                    models.RecipeType.name.in_(recipe.dict().pop("recipe_types", None))
-                )
+                .filter(models.RecipeType.name.in_(recipe.dict().pop("recipe_types", None)))
                 .all()
             )
         setattr(db_recipe, k, v)

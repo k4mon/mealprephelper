@@ -17,12 +17,8 @@ def create_user(
 
 
 @router.post("/token", response_model=user_schema.Token)
-async def login(
-    form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
-):
-    if user := user_service.authenticate_user(
-        db, form_data.username, form_data.password
-    ):
+async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    if user := user_service.authenticate_user(db, form_data.username, form_data.password):
         return {
             "access_token": user_service.create_access_token(data={"sub": user.email}),
             "token_type": "bearer",

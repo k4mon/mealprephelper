@@ -22,8 +22,5 @@ app.add_middleware(
 app.include_router(users_api.router, tags=["users"])
 
 app.include_router(
-    recipes_api.router,
-    prefix="/recipes",
-    tags=["recipes"],
-    dependencies=[Depends(oauth2_scheme)],
+    recipes_api.router, prefix="/recipes", tags=["recipes"], dependencies=[Depends(oauth2_scheme)],
 )
