@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from mealprephelper.users.factory import create_user_service
 from mealprephelper.users.service.interface import AbstractUserService, UnauthorizedError
-from mealprephelper.users.service.schema import User, UserCreate, Token
+from mealprephelper.users.schema import User, UserCreate, Token
 
 router = APIRouter()
 

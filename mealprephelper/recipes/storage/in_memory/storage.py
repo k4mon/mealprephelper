@@ -1,13 +1,13 @@
 from typing import List
 
-from mealprephelper.recipes.service.schema import (
+from mealprephelper.recipes.schema import (
     Ingredient,
     Recipe,
     RecipeCreate,
     RecipeType,
     RecipeIngredient,
 )
-from mealprephelper.recipes.storage.dataclasses import (
+from mealprephelper.recipes.storage.in_memory.dataclasses import (
     StorageRecipeType,
     StorageRecipeIngredient,
     StorageRecipe,

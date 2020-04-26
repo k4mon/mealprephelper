@@ -1,6 +1,6 @@
 from mealprephelper.recipes.service.interface import AbstractRecipeService
 from mealprephelper.recipes.service.service import RecipeService
-from mealprephelper.recipes.storage.storage import InMemoryRecipeStorage
+from mealprephelper.recipes.storage.in_memory.storage import InMemoryRecipeStorage
 
 storage = InMemoryRecipeStorage()
 

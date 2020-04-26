@@ -1,5 +1,5 @@
-from mealprephelper.users.service.schema import UserWithHashedPassword, User
-from mealprephelper.users.storage.dataclasses import StorageUser
+from mealprephelper.users.schema import UserWithHashedPassword, User
+from mealprephelper.users.storage.in_memory.dataclasses import StorageUser
 from mealprephelper.users.storage.interface import AbstractUserStorage
 
 

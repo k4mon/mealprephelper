@@ -1,7 +1,7 @@
 import abc
 from typing import List
 
-from mealprephelper.recipes.service.schema import Recipe, Ingredient, RecipeCreate
+from mealprephelper.recipes.schema import Recipe, Ingredient, RecipeCreate
 
 
 class AbstractRecipeService(metaclass=abc.ABCMeta):

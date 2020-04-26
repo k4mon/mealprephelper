@@ -1,7 +1,7 @@
 from mealprephelper.users.service.helpers.password import hash_password, verify_password
-from mealprephelper.users.service.helpers.token import create_access_token
+from mealprephelper.token import create_access_token
 from mealprephelper.users.service.interface import AbstractUserService, UnauthorizedError
-from mealprephelper.users.service.schema import UserCreate, User, UserWithHashedPassword, Token
+from mealprephelper.users.schema import UserCreate, User, UserWithHashedPassword, Token
 from mealprephelper.users.storage.interface import AbstractUserStorage
 
 

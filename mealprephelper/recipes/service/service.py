@@ -1,7 +1,7 @@
 from typing import List
 
 from mealprephelper.recipes.service.interface import AbstractRecipeService
-from mealprephelper.recipes.service.schema import Ingredient, RecipeCreate, Recipe
+from mealprephelper.recipes.schema import Ingredient, RecipeCreate, Recipe
 from mealprephelper.recipes.storage.interface import AbstractRecipeStorage
 
 

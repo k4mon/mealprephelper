@@ -1,6 +1,6 @@
 import abc
 
-from mealprephelper.users.service.schema import UserWithHashedPassword, User
+from mealprephelper.users.schema import UserWithHashedPassword, User
 
 
 class AbstractUserStorage(metaclass=abc.ABCMeta):

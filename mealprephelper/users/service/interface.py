@@ -1,6 +1,6 @@
 import abc
 
-from mealprephelper.users.service.schema import UserCreate, User, Token
+from mealprephelper.users.schema import UserCreate, User, Token
 
 
 class UnauthorizedError(Exception):
