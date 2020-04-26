@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic.main import BaseModel
 
 
 class UserBase(BaseModel):
@@ -12,6 +12,10 @@ class UserCreate(UserBase):
     password: str
 
 
+class UserWithHashedPassword(UserBase):
+    hashed_password: str
+
+
 class User(UserBase):
     id: int
 
@@ -19,7 +23,3 @@ class User(UserBase):
 class Token(BaseModel):
     access_token: str
     token_type: str
-
-
-class TokenData(BaseModel):
-    username: str = None

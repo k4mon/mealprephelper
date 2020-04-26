@@ -1,9 +1,6 @@
 fastapi
 uvicorn
-sqlalchemy
-psycopg2-binary
 environs
-alembic
 passlib[bcrypt]
 pyjwt
 python-multipart

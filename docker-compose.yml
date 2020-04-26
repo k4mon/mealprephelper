@@ -8,25 +8,8 @@ services:
       - env/local.env
     volumes:
       - ./mealprephelper:/app/mealprephelper
-      - ./alembic:/app/alembic
     ports:
       - 5555:5555
     restart: always
-    depends_on:
-      - db
     working_dir: /app
-    command: ["sh", "-c", "./mealprephelper/wait-for db:5432 -- uvicorn mealprephelper.main:app --reload --host 0.0.0.0 --port 5555"]
-
-  db:
-    image: postgres:11.7
-    ports:
-      - 5432:5432
-    restart: always
-    env_file:
-      - env/local.env
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+    command: uvicorn mealprephelper.main:app --reload --host 0.0.0.0 --port 5555
