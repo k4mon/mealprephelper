@@ -13,8 +13,10 @@ router = APIRouter()
 
 @router.get("/", response_model=List[Recipe])
 def get_recipes(
-    service: AbstractRecipeService = Depends(create_recipe_service), token=Depends(oauth2_scheme),
+    service: AbstractRecipeService = Depends(create_recipe_service),
+    token: str = Depends(oauth2_scheme),
 ):
+    get_username_from_token(token)
     return service.get_recipes()
 
 
@@ -24,6 +26,7 @@ def get_recipe(
     service: AbstractRecipeService = Depends(create_recipe_service),
     token=Depends(oauth2_scheme),
 ):
+    get_username_from_token(token)
     return service.get_recipe(recipe_id)
 
 
@@ -33,6 +36,7 @@ def create_recipe(
     service: AbstractRecipeService = Depends(create_recipe_service),
     token=Depends(oauth2_scheme),
 ):
+    get_username_from_token(token)
     return service.create_recipe(recipe)
 
 
@@ -43,7 +47,7 @@ def update_recipe(
     service: AbstractRecipeService = Depends(create_recipe_service),
     token=Depends(oauth2_scheme),
 ):
-    print(get_username_from_token(token))
+    get_username_from_token(token)
     return service.update_recipe(recipe_id, recipe)
 
 
@@ -53,6 +57,7 @@ def delete_recipe(
     service: AbstractRecipeService = Depends(create_recipe_service),
     token=Depends(oauth2_scheme),
 ):
+    get_username_from_token(token)
     return service.delete_recipe(recipe_id)
 
 
@@ -60,6 +65,7 @@ def delete_recipe(
 def get_ingredients(
     service: AbstractRecipeService = Depends(create_recipe_service), token=Depends(oauth2_scheme)
 ):
+    get_username_from_token(token)
     return service.get_ingredients()
 
 
@@ -69,4 +75,5 @@ def delete_ingredient(
     service: AbstractRecipeService = Depends(create_recipe_service),
     token=Depends(oauth2_scheme),
 ):
+    get_username_from_token(token)
     return service.delete_ingredient(ingredient_id)

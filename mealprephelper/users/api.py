@@ -30,4 +30,4 @@ async def login(
     try:
         return user_service.authenticate_user(form_data.username, form_data.password)
     except UnauthorizedError:
-        raise HTTPException(status_code=403)
+        raise HTTPException(status_code=401)
