@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.get("/", response_model=List[Recipe])
 def get_recipes(
-    service: AbstractRecipeService = Depends(create_recipe_service), token=Depends(oauth2_scheme)
+    service: AbstractRecipeService = Depends(create_recipe_service), token=Depends(oauth2_scheme),
 ):
     return service.get_recipes()
 

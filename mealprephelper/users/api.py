@@ -2,7 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
 from mealprephelper.users.factory import create_user_service
-from mealprephelper.users.service.interface import AbstractUserService, UnauthorizedError
+from mealprephelper.users.service.interface import (
+    AbstractUserService,
+    UnauthorizedError,
+    UserExistsError,
+)
 from mealprephelper.users.schema import User, UserCreate, Token
 
 router = APIRouter()
@@ -12,7 +16,10 @@ router = APIRouter()
 def create_user(
     user: UserCreate, user_service: AbstractUserService = Depends(create_user_service)
 ):
-    return user_service.create_user(user)
+    try:
+        return user_service.create_user(user)
+    except UserExistsError:
+        raise HTTPException(status_code=400)
 
 
 @router.post("/token", response_model=Token)

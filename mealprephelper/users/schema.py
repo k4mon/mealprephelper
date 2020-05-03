@@ -2,7 +2,7 @@ from pydantic.main import BaseModel
 
 
 class UserBase(BaseModel):
-    email: str
+    username: str
 
     class Config:
         orm_mode = True

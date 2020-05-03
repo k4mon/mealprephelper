@@ -9,9 +9,9 @@ class AbstractUserStorage(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_user_hashed_password(self, email: str) -> str:
+    def get_user_hashed_password(self, username: str) -> str:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def exists(self, email: str) -> bool:
+    def exists(self, username: str) -> bool:
         raise NotImplementedError

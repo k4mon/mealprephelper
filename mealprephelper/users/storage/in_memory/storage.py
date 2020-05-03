@@ -15,11 +15,11 @@ class InMemoryUserStorage(AbstractUserStorage):
     def create(self, user: UserWithHashedPassword) -> User:
         new_user = StorageUser(**user.dict(), user_id=self._get_next_user_id())
         self.USERS.append(new_user)
-        return User(id=new_user.user_id, email=new_user.email)
+        return User(id=new_user.user_id, username=new_user.username)
 
-    def get_user_hashed_password(self, email: str) -> str:
-        stored_user = next(user for user in self.USERS if user.email == email)
+    def get_user_hashed_password(self, username: str) -> str:
+        stored_user = next(user for user in self.USERS if user.username == username)
         return stored_user.hashed_password
 
-    def exists(self, email: str):
-        return any([db_user for db_user in self.USERS if db_user.email == email])
+    def exists(self, username: str):
+        return any([db_user for db_user in self.USERS if db_user.username == username])

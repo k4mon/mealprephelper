@@ -1,6 +1,10 @@
 from mealprephelper.users.service.helpers.password import hash_password, verify_password
 from mealprephelper.token import create_access_token
-from mealprephelper.users.service.interface import AbstractUserService, UnauthorizedError
+from mealprephelper.users.service.interface import (
+    AbstractUserService,
+    UnauthorizedError,
+    UserExistsError,
+)
 from mealprephelper.users.schema import UserCreate, User, UserWithHashedPassword, Token
 from mealprephelper.users.storage.interface import AbstractUserStorage
 
@@ -11,17 +15,19 @@ class UserService(AbstractUserService):
 
     def create_user(self, user: UserCreate) -> User:
         hashed_password = hash_password(user.password)
-        if self.storage.exists(user.email):
-            raise Exception("User already exists")
+        if self.storage.exists(user.username):
+            raise UserExistsError("User already exists")
         return self.storage.create(
-            UserWithHashedPassword(email=user.email, hashed_password=hashed_password)
+            UserWithHashedPassword(username=user.username, hashed_password=hashed_password)
         )
 
-    def authenticate_user(self, email: str, password: str) -> Token:
-        user = self.storage.exists(email)
-        if not user or not verify_password(password, self.storage.get_user_hashed_password(email)):
+    def authenticate_user(self, username: str, password: str) -> Token:
+        user = self.storage.exists(username)
+        if not user or not verify_password(
+            password, self.storage.get_user_hashed_password(username)
+        ):
             raise UnauthorizedError
         else:
             return Token(
-                access_token=create_access_token(data={"sub": email}), token_type="bearer",
+                access_token=create_access_token(data={"sub": username}), token_type="bearer",
             )
