@@ -17,16 +17,20 @@ from mealprephelper.recipes.storage.interface import AbstractRecipeStorage
 
 
 class InMemoryRecipeStorage(AbstractRecipeStorage):
-    RECIPES = []
+    RECIPES = {}
     RECIPE_ID = 0
     INGREDIENTS = []
     INGREDIENT_ID = 0
     RECIPE_TYPES = [
-        StorageRecipeType(recipe_type_id=0, name="breakfast", color="#008000"),
-        StorageRecipeType(recipe_type_id=1, name="lunch", color="#000080"),
-        StorageRecipeType(recipe_type_id=2, name="snack", color="#880000"),
-        StorageRecipeType(recipe_type_id=3, name="dinner", color="#800080"),
+        StorageRecipeType(recipe_type_id=0, name="breakfast", color="#E06B79"),
+        StorageRecipeType(recipe_type_id=1, name="lunch", color="#4A90E2"),
+        StorageRecipeType(recipe_type_id=2, name="snack", color="#99E245"),
+        StorageRecipeType(recipe_type_id=3, name="dinner", color="#A46CD4"),
     ]
+
+    def _initialize_user_recipes(self, username):
+        if self.RECIPES.get(username) is None:
+            self.RECIPES[username] = []
 
     def _get_next_recipe_id(self):
         user_id = self.RECIPE_ID
@@ -97,7 +101,8 @@ class InMemoryRecipeStorage(AbstractRecipeStorage):
             )
         return stored_recipe_ingredients
 
-    def get_all_recipes(self) -> List[Recipe]:
+    def get_all_recipes(self, username: str) -> List[Recipe]:
+        self._initialize_user_recipes(username)
         return [
             Recipe(
                 id=recipe.recipe_id,
@@ -106,12 +111,15 @@ class InMemoryRecipeStorage(AbstractRecipeStorage):
                 recipe_types=self._map_recipe_types_from_dataclass(recipe.recipe_types),
                 ingredients=self._map_ingredients_from_dataclass(recipe.ingredients),
             )
-            for recipe in self.RECIPES
+            for recipe in self.RECIPES.get(username)
         ]
 
-    def get_recipe_by_id(self, recipe_id: int) -> Recipe:
+    def get_recipe_by_id(self, username: str, recipe_id: int) -> Recipe:
+        self._initialize_user_recipes(username)
         stored_recipe = next(
-            stored_recipe for stored_recipe in self.RECIPES if stored_recipe.recipe_id == recipe_id
+            stored_recipe
+            for stored_recipe in self.RECIPES.get(username)
+            if stored_recipe.recipe_id == recipe_id
         )
         return Recipe(
             id=stored_recipe.recipe_id,
@@ -121,10 +129,12 @@ class InMemoryRecipeStorage(AbstractRecipeStorage):
             ingredients=self._map_ingredients_from_dataclass(stored_recipe.ingredients),
         )
 
-    def recipe_exists(self, recipe_name: str) -> bool:
-        return any([recipe for recipe in self.RECIPES if recipe.name == recipe_name])
+    def recipe_exists(self, username: str, recipe_name: str) -> bool:
+        self._initialize_user_recipes(username)
+        return any([recipe for recipe in self.RECIPES.get(username) if recipe.name == recipe_name])
 
-    def create_recipe(self, recipe: RecipeCreate) -> Recipe:
+    def create_recipe(self, username: str, recipe: RecipeCreate) -> Recipe:
+        self._initialize_user_recipes(username)
         stored_recipe = StorageRecipe(
             recipe_id=self._get_next_recipe_id(),
             name=recipe.name,
@@ -132,7 +142,7 @@ class InMemoryRecipeStorage(AbstractRecipeStorage):
             recipe_types=self._map_recipe_types_to_dataclass(recipe.recipe_types),
             ingredients=self._add_ingredients(recipe.ingredients),
         )
-        self.RECIPES.append(stored_recipe)
+        self.RECIPES.get(username).append(stored_recipe)
         return Recipe(
             id=stored_recipe.recipe_id,
             name=stored_recipe.name,
@@ -141,8 +151,9 @@ class InMemoryRecipeStorage(AbstractRecipeStorage):
             ingredients=self._map_ingredients_from_dataclass(stored_recipe.ingredients),
         )
 
-    def update_recipe(self, recipe_id: int, recipe: RecipeCreate) -> Recipe:
-        self.delete_recipe(recipe_id)
+    def update_recipe(self, username: str, recipe_id: int, recipe: RecipeCreate) -> Recipe:
+        self._initialize_user_recipes(username)
+        self.delete_recipe(username, recipe_id)
         stored_recipe = StorageRecipe(
             recipe_id=recipe_id,
             name=recipe.name,
@@ -150,7 +161,7 @@ class InMemoryRecipeStorage(AbstractRecipeStorage):
             recipe_types=self._map_recipe_types_to_dataclass(recipe.recipe_types),
             ingredients=self._add_ingredients(recipe.ingredients),
         )
-        self.RECIPES.append(stored_recipe)
+        self.RECIPES.get(username).append(stored_recipe)
         return Recipe(
             id=stored_recipe.recipe_id,
             name=stored_recipe.name,
@@ -159,10 +170,11 @@ class InMemoryRecipeStorage(AbstractRecipeStorage):
             ingredients=self._map_ingredients_from_dataclass(stored_recipe.ingredients),
         )
 
-    def delete_recipe(self, recipe_id: int) -> None:
+    def delete_recipe(self, username: str, recipe_id: int) -> None:
+        self._initialize_user_recipes(username)
         for recipe in self.RECIPES:
             if recipe.recipe_id == recipe_id:
-                self.RECIPES.remove(recipe)
+                self.RECIPES.get(username).remove(recipe)
                 return None
 
     def get_all_ingredients(self) -> List[Ingredient]:
@@ -177,5 +189,5 @@ class InMemoryRecipeStorage(AbstractRecipeStorage):
                 self.INGREDIENTS.remove(ingredient)
                 return None
 
-    def get_recipe_types_names(self) -> List[str]:
-        return [recipe_type.name for recipe_type in self.RECIPE_TYPES]
+    def get_recipe_types(self, username: str) -> List[RecipeType]:
+        return self._map_recipe_types_from_dataclass(self.RECIPE_TYPES)
