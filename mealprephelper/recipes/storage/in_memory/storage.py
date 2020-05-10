@@ -172,7 +172,7 @@ class InMemoryRecipeStorage(AbstractRecipeStorage):
 
     def delete_recipe(self, username: str, recipe_id: int) -> None:
         self._initialize_user_recipes(username)
-        for recipe in self.RECIPES:
+        for recipe in self.RECIPES.get(username):
             if recipe.recipe_id == recipe_id:
                 self.RECIPES.get(username).remove(recipe)
                 return None
